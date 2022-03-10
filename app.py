@@ -18,11 +18,11 @@ def index():
     img = []
 
     for i in range(len(articles)):
-        myarticles= articles[i]
+        articles = articles[i]
 
-        news.append(myarticles['title'])
-        desc.append(myarticles['description'])
-        img.append(myarticles['urlToImage'])
+        news.append(articles['title'])
+        desc.append(articles['description'])
+        img.append(articles['urlToImage'])
 
     mylist = zip(news, desc, img)
 
