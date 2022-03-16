@@ -1,84 +1,33 @@
-from flask import render_template
-from newsapi import NewsApiClient
+from typing import List
+from app.models import Sources
+from app.models import Articles
+from flask import render_template,request,redirect,url_for
 from . import main
-
-
-
+from ..requests import get_articles, get_sources
 
 @main.route('/')
-def index():
-    newsapi = NewsApiClient(api_key="8d21ef3a971c46e88b1d74d2055ca276")
-    topheadlines = newsapi.get_top_headlines(sources="fox-news")
-
-    articles = topheadlines['articles']
-    # print(articles)
+def sources():
     
+    all_sources = get_sources()
+    return render_template("sources.html", sources = all_sources)
+
+@main.route('/articles/<sources_id>')
+def articles(sources_id):
     
-    desc = []
-    news = []
-    img = []
-    url = []
-
-    for i in range(len(articles)):
-        myarticles = articles[i]
-
-        
-        news.append(myarticles['title'])
-        desc.append(myarticles['description'])
-        img.append(myarticles['urlToImage'])
-        url.append(myarticles['url'])
-
-    mylist = zip(news, desc, img, url)
+    news = get_articles(sources_id)
+    return render_template("articles.html", id = news)
 
 
 
-    return render_template('index.html', context= mylist)
+
+#@app.route('/movie/<movie_id>')
+#def movie(movie_id):
+
+    '''
+    View movie page function that returns the movie details page and its data
+    '''
+    #return render_template('movie.html',id = movie_id)
 
 
-@main.route('/bbc')
-def bbc():
-    newsapi = NewsApiClient(api_key="8d21ef3a971c46e88b1d74d2055ca276")
-    topheadlines = newsapi.get_top_headlines(sources="bbc-news")
- 
-    articles = topheadlines['articles']
- 
-    desc = []
-    news = []
-    img = []
-    url=[]
- 
-    for i in range(len(articles)):
-        myarticles = articles[i]
- 
-        news.append(myarticles['title'])
-        desc.append(myarticles['description'])
-        img.append(myarticles['urlToImage'])
-        url.append(myarticles['url'])
- 
-    mylist = zip(news, desc, img, url)
- 
-    return render_template('bbc.html', context=mylist)
 
-@main.route('/cbc')
-def cbc():
-    newsapi = NewsApiClient(api_key="8d21ef3a971c46e88b1d74d2055ca276")
-    topheadlines = newsapi.get_top_headlines(sources="cbc-news")
- 
-    articles = topheadlines['articles']
- 
-    desc = []
-    news = []
-    img = []
-    url =[]
- 
-    for i in range(len(articles)):
-        myarticles = articles[i]
- 
-        news.append(myarticles['title'])
-        desc.append(myarticles['description'])
-        img.append(myarticles['urlToImage'])
-        url.append(myarticles['url'])
- 
-    mylist = zip(news, desc, img), url
- 
-    return render_template('cbc.html', context=mylist)
+
